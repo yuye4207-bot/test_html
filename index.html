@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot KPI Dashboard</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        function ChatbotKPIDashboard() {
+          const [kpis, setKpis] = useState({
+            totalConversations: 1247,
+            activeUsers: 892,
+            avgResponseTime: 1.2,
+            resolutionRate: 87.5,
+            userSatisfaction: 4.3,
+            topIntents: [
+              { name: 'Order Status', count: 324 },
+              { name: 'Product Info', count: 289 },
+              { name: 'Technical Support', count: 156 },
+              { name: 'Billing', count: 134 }
+            ],
+            hourlyActivity: [
+              { hour: '00&#58;00', conversations: 12 },
+              { hour: '06&#58;00', conversations: 45 },
+              { hour: '12&#58;00', conversations: 89 },
+              { hour: '18&#58;00', conversations: 67 }
+            ]
+          });
+
+          useEffect(() => {
+            const interval = setInterval(() => {
+              setKpis(prev => ({
+                ...prev,
+                totalConversations: prev.totalConversations + Math.floor(Math.random() * 3),
+                activeUsers: prev.activeUsers + Math.floor(Math.random() * 5) - 2
+              }));
+            }, 5000);
+
+            return () => clearInterval(interval);
+          }, []);
+
+          const cardStyle = {
+            backgroundColor: '#fff',
+            borderRadius: '8px',
+            padding: '20px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            border: '1px solid #e1e5e9'
+          };
+
+          const headerStyle = {
+            fontSize: '14px',
+            color: '#666',
+            marginBottom: '8px',
+            fontWeight: '500'
+          };
+
+          const valueStyle = {
+            fontSize: '28px',
+            fontWeight: 'bold',
+            color: '#2c3e50',
+            marginBottom: '4px'
+          };
+
+          const subValueStyle = {
+            fontSize: '12px',
+            color: '#27ae60'
+          };
+
+          return (
+            <div style={{
+              fontFamily: 'Arial, sans-serif',
+              backgroundColor: '#f8f9fa',
+              minHeight: '100vh',
+              padding: '20px'
+            }}>
+              <div style={{ marginBottom: '30px' }}>
+                <h1 style={{ 
+                  color: '#2c3e50', 
+                  marginBottom: '8px',
+                  fontSize: '24px',
+                  fontWeight: 'bold'
+                }}>
+                  Chatbot Performance Dashboard
+                </h1>
+                <p style={{ color: '#666', margin: 0 }}>
+                  Real-time analytics and key performance indicators
+                </p>
+              </div>
+
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                gap: '20px',
+                marginBottom: '30px'
+              }}>
+                <div style={cardStyle}>
+                  <div style={headerStyle}>Total Conversations</div>
+                  <div style={valueStyle}>{kpis.totalConversations.toLocaleString()}</div>
+                  <div style={subValueStyle}>↗ +12% from yesterday</div>
+                </div>
+
+                <div style={cardStyle}>
+                  <div style={headerStyle}>Active Users</div>
+                  <div style={valueStyle}>{kpis.activeUsers}</div>
+                  <div style={subValueStyle}>↗ +8% from yesterday</div>
+                </div>
+
+                <div style={cardStyle}>
+                  <div style={headerStyle}>Avg Response Time</div>
+                  <div style={valueStyle}>{kpis.avgResponseTime}s</div>
+                  <div style={subValueStyle}>↘ -0.3s improvement</div>
+                </div>
+
+                <div style={cardStyle}>
+                  <div style={headerStyle}>Resolution Rate</div>
+                  <div style={valueStyle}>{kpis.resolutionRate}%</div>
+                  <div style={subValueStyle}>↗ +2.1% from yesterday</div>
+                </div>
+
+                <div style={cardStyle}>
+                  <div style={headerStyle}>User Satisfaction</div>
+                  <div style={valueStyle}>{kpis.userSatisfaction}/5</div>
+                  <div style={subValueStyle}>⭐ Excellent rating</div>
+                </div>
+              </div>
+
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                gap: '20px'
+              }}>
+                <div style={cardStyle}>
+                  <h3 style={{ 
+                    margin: '0 0 20px 0', 
+                    color: '#2c3e50',
+                    fontSize: '16px'
+                  }}>
+                    Top Conversation Topics
+                  </h3>
+                  {kpis.topIntents.map((intent, index) => (
+                    <div key={intent.name} style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      padding: '8px 0',
+                      borderBottom: index < kpis.topIntents.length - 1 ? '1px solid #eee' : 'none'
+                    }}>
+                      <span style={{ color: '#2c3e50' }}>{intent.name}</span>
+                      <div style={{
+                        backgroundColor: '#3498db',
+                        color: 'white',
+                        padding: '4px 8px',
+                        borderRadius: '12px',
+                        fontSize: '12px',
+                        fontWeight: 'bold'
+                      }}>
+                        {intent.count}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div style={cardStyle}>
+                  <h3 style={{ 
+                    margin: '0 0 20px 0', 
+                    color: '#2c3e50',
+                    fontSize: '16px'
+                  }}>
+                    Activity Throughout Day
+                  </h3>
+                  <div style={{ height: '120px', position: 'relative' }}>
+                    {kpis.hourlyActivity.map((activity, index) => (
+                      <div key={activity.hour} style={{
+                        display: 'flex',
+                        alignItems: 'end',
+                        justifyContent: 'center',
+                        position: 'absolute',
+                        left: `${index * 25}%`,
+                        bottom: 0,
+                        width: '20%',
+                        height: '100%'
+                      }}>
+                        <div style={{
+                          backgroundColor: '#e74c3c',
+                          width: '30px',
+                          height: `${(activity.conversations / 100) * 100}%`,
+                          borderRadius: '4px 4px 0 0',
+                          position: 'relative'
+                        }}>
+                          <div style={{
+                            position: 'absolute',
+                            top: '-20px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            fontSize: '10px',
+                            color: '#666',
+                            fontWeight: 'bold'
+                          }}>
+                            {activity.conversations}
+                          </div>
+                        </div>
+                        <div style={{
+                          position: 'absolute',
+                          bottom: '-25px',
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          fontSize: '10px',
+                          color: '#666'
+                        }}>
+                          {activity.hour}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div style={cardStyle}>
+                  <h3 style={{ 
+                    margin: '0 0 20px 0', 
+                    color: '#2c3e50',
+                    fontSize: '16px'
+                  }}>
+                    System Status
+                  </h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <div style={{
+                        width: '8px',
+                        height: '8px',
+                        borderRadius: '50%',
+                        backgroundColor: '#27ae60'
+                      }}></div>
+                      <span style={{ color: '#2c3e50' }}>Chatbot Online</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <div style={{
+                        width: '8px',
+                        height: '8px',
+                        borderRadius: '50%',
+                        backgroundColor: '#27ae60'
+                      }}></div>
+                      <span style={{ color: '#2c3e50' }}>API Healthy</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <div style={{
+                        width: '8px',
+                        height: '8px',
+                        borderRadius: '50%',
+                        backgroundColor: '#f39c12'
+                      }}></div>
+                      <span style={{ color: '#2c3e50' }}>High Traffic Alert</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        ReactDOM.render(<ChatbotKPIDashboard />, document.getElementById('root'));
+    </script>
+</body>
+</html>
